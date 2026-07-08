@@ -69,8 +69,8 @@ export default function LoginForm() {
   };
 
   return (
-    <Card>
-      <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+    <Card className="p-5 sm:p-6">
+      <form className="space-y-4 sm:space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
         <div>
           <Label htmlFor="login-email">Email</Label>
           <Input
@@ -82,7 +82,9 @@ export default function LoginForm() {
             {...register("email")}
           />
           {errors.email ? (
-            <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>
+            <p className="mt-2 text-sm font-medium text-red-600">
+              {errors.email.message}
+            </p>
           ) : null}
         </div>
 
@@ -96,15 +98,17 @@ export default function LoginForm() {
             {...register("password")}
           />
           {errors.password ? (
-            <p className="mt-2 text-sm text-red-600">{errors.password.message}</p>
+            <p className="mt-2 text-sm font-medium text-red-600">
+              {errors.password.message}
+            </p>
           ) : null}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
           <label className="inline-flex items-center gap-2 text-sm font-medium text-slate-600">
             <input
               type="checkbox"
-              className="size-4 rounded border-slate-300 text-green-600 focus:ring-green-600"
+              className="size-4 rounded border-slate-300 text-green-600 focus:ring-4 focus:ring-green-600/10"
               {...register("remember")}
             />
             Remember me
@@ -119,7 +123,7 @@ export default function LoginForm() {
         </div>
 
         {formError ? (
-          <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          <p className="rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-medium leading-6 text-red-700">
             {formError}
           </p>
         ) : null}
@@ -131,7 +135,7 @@ export default function LoginForm() {
 
       <SocialButtons />
 
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm leading-6 text-slate-500">
         New to DRAM?{" "}
         <Link
           className="font-semibold text-green-700 hover:text-green-800"

@@ -1,6 +1,6 @@
 export default function AuthFooter() {
   return (
-    <p className="mt-6 text-center text-xs leading-5 text-slate-400">
+    <p className="mt-6 text-center text-xs leading-5 text-slate-400 sm:mt-7">
       Protected by Supabase authentication and encrypted transport.
     </p>
   );

@@ -24,7 +24,7 @@ export default function PasswordInput({
       <button
         type="button"
         onClick={() => setShow(!show)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500 transition hover:text-slate-900"
+        className="absolute right-3 top-1/2 rounded-xl px-2 py-1 -translate-y-1/2 text-sm font-semibold text-slate-500 outline-none transition hover:text-slate-900 focus-visible:ring-4 focus-visible:ring-green-600/10"
       >
         {show ? "Hide" : "Show"}
       </button>

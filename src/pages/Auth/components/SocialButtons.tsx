@@ -45,11 +45,13 @@ export default function SocialButtons() {
         isLoading={isLoading}
         onClick={signInWithGoogle}
       >
-        <ShieldCheck className="size-5" aria-hidden="true" />
+        <ShieldCheck className="size-5 text-green-700" aria-hidden="true" />
         Continue with Google
       </Button>
       {errorMessage ? (
-        <p className="mt-3 text-center text-sm text-red-600">{errorMessage}</p>
+        <p className="mt-3 text-center text-sm font-medium text-red-600">
+          {errorMessage}
+        </p>
       ) : null}
     </div>
   );
