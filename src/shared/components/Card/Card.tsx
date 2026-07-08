@@ -1,20 +1,14 @@
 import type { ReactNode } from "react";
-import { theme } from "../../lib/theme";
 
 type CardProps = {
   children: ReactNode;
+  className?: string;
 };
 
-export default function Card({ children }: CardProps) {
+export default function Card({ children, className = "" }: CardProps) {
   return (
     <div
-      style={{
-        background: theme.colors.surface,
-        borderRadius: theme.radius.lg,
-        padding: 24,
-        boxShadow: "0 8px 24px rgba(0,0,0,.06)",
-        border: `1px solid ${theme.colors.border}`,
-      }}
+      className={`rounded-[20px] border border-slate-200 bg-white p-6 shadow-sm ${className}`}
     >
       {children}
     </div>
