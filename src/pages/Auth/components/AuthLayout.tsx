@@ -64,9 +64,16 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <div className="grid w-full overflow-hidden bg-white lg:rounded-[32px] lg:border lg:border-slate-200 lg:shadow-2xl lg:shadow-slate-950/10 lg:grid-cols-[1fr_440px]">
           <section className="hidden min-h-[640px] bg-green-950 p-10 text-white lg:flex lg:flex-col lg:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-green-200">
-                DRAM
-              </p>
+              <div className="inline-flex items-center gap-3">
+                <img
+                  src="/favicon.png"
+                  alt="DRAM"
+                  className="size-10 rounded-2xl"
+                />
+                <span className="text-sm font-semibold uppercase tracking-[0.24em] text-green-200">
+                  DRAM
+                </span>
+              </div>
               <h2 className="mt-8 max-w-lg text-5xl font-semibold leading-tight tracking-normal">
                 {marketing.headline}
               </h2>
