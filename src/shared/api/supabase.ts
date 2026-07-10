@@ -2,7 +2,13 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+const missingSupabaseEnv = [
+  ["VITE_SUPABASE_URL", supabaseUrl],
+  ["VITE_SUPABASE_ANON_KEY", supabaseAnonKey],
+]
+  .filter(([, value]) => !value)
+  .map(([name]) => name);
+const isSupabaseConfigured = missingSupabaseEnv.length === 0;
 
 const rememberSessionKey = "dram.remember_session";
 
@@ -47,8 +53,17 @@ export const setRememberSession = (remember: boolean) => {
   window.localStorage.setItem(rememberSessionKey, String(remember));
 };
 
-export const supabaseConfigError =
-  "Missing Supabase environment variables. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.";
+export const supabaseConfigError = isSupabaseConfigured
+  ? ""
+  : `Supabase is not configured. Missing environment variable${
+      missingSupabaseEnv.length > 1 ? "s" : ""
+    }: ${missingSupabaseEnv.join(
+      ", ",
+    )}. Copy .env.example to .env.local and fill in your Supabase URL and Anon Key.`;
+
+if (!isSupabaseConfigured && import.meta.env.DEV) {
+  console.warn(supabaseConfigError);
+}
 
 export const supabase: SupabaseClient | null = isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseAnonKey, {
