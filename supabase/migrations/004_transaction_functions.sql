@@ -338,6 +338,13 @@ revoke all on function public.apply_transaction_balance(
   uuid,
   integer
 ) from public;
+revoke execute on function public.apply_transaction_balance(
+  public.transaction_type,
+  numeric,
+  uuid,
+  uuid,
+  integer
+) from anon, authenticated;
 
 revoke all on function public.validate_transaction_input(
   uuid,
@@ -348,6 +355,15 @@ revoke all on function public.validate_transaction_input(
   uuid,
   uuid
 ) from public;
+revoke execute on function public.validate_transaction_input(
+  uuid,
+  public.transaction_type,
+  numeric,
+  public.finance_currency,
+  uuid,
+  uuid,
+  uuid
+) from anon, authenticated;
 
 revoke all on function public.create_transaction(
   public.transaction_type,
@@ -359,6 +375,16 @@ revoke all on function public.create_transaction(
   uuid,
   text
 ) from public;
+revoke execute on function public.create_transaction(
+  public.transaction_type,
+  numeric,
+  public.finance_currency,
+  uuid,
+  timestamptz,
+  uuid,
+  uuid,
+  text
+) from anon;
 
 revoke all on function public.update_transaction(
   uuid,
@@ -371,8 +397,20 @@ revoke all on function public.update_transaction(
   uuid,
   text
 ) from public;
+revoke execute on function public.update_transaction(
+  uuid,
+  public.transaction_type,
+  numeric,
+  public.finance_currency,
+  uuid,
+  timestamptz,
+  uuid,
+  uuid,
+  text
+) from anon;
 
 revoke all on function public.delete_transaction(uuid) from public;
+revoke execute on function public.delete_transaction(uuid) from anon;
 
 grant execute on function public.create_transaction(
   public.transaction_type,

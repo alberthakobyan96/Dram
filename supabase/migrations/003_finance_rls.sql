@@ -2,6 +2,9 @@ alter table public.accounts enable row level security;
 alter table public.categories enable row level security;
 alter table public.transactions enable row level security;
 
+revoke update on public.accounts from anon, authenticated;
+grant update (name, type, currency, is_active) on public.accounts to authenticated;
+
 drop policy if exists "Users can read own accounts" on public.accounts;
 create policy "Users can read own accounts"
 on public.accounts
