@@ -75,3 +75,13 @@ export type CreateTransactionInput =
 export type UpdateTransactionInput = CreateTransactionInput & {
   id: string;
 };
+
+export type TransactionFormValues = {
+  type: TransactionType;
+  amount: string;
+  accountId: string;
+  destinationAccountId: string;
+  categoryId: string;
+  occurredAt: string;
+  note: string;
+};

@@ -1,3 +1,5 @@
+import { ChevronRight, WalletCards } from "lucide-react";
+import { Link } from "react-router-dom";
 import { dashboardDefaultState } from "../../entities/dashboard";
 import { useAuthStore } from "../../entities/auth";
 import { supabase } from "../../shared/api/supabase";
@@ -7,12 +9,42 @@ import MonthlySummary from "./components/MonthlySummary";
 import QuickActions from "./components/QuickActions";
 import RecentTransactions from "./components/RecentTransactions";
 
+const getFirstName = (value?: string) => {
+  if (!value) {
+    return undefined;
+  }
+
+  const cleanValue = value.includes("@") ? value.split("@")[0] : value;
+  const [firstName] = cleanValue.split(/[\s._-]+/).filter(Boolean);
+
+  if (!firstName) {
+    return undefined;
+  }
+
+  return `${firstName.charAt(0).toUpperCase()}${firstName.slice(1).toLowerCase()}`;
+};
+
+const getGreeting = () => {
+  const hour = new Date().getHours();
+
+  if (hour < 12) {
+    return "Good morning";
+  }
+
+  if (hour < 18) {
+    return "Good afternoon";
+  }
+
+  return "Good evening";
+};
+
 export default function HomePage() {
   const user = useAuthStore((state) => state.user);
-  const displayName =
+  const displaySource =
     typeof user?.user_metadata.full_name === "string"
       ? user.user_metadata.full_name
       : user?.email;
+  const firstName = getFirstName(displaySource);
 
   const signOut = async () => {
     if (!supabase) {
@@ -23,16 +55,57 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-6 text-slate-950 sm:px-6 sm:py-8">
-      <div className="mx-auto grid w-full max-w-6xl gap-6 lg:grid-cols-[1fr_380px]">
-        <div className="grid gap-6">
-          <DashboardHeader displayName={displayName} onLogout={signOut} />
+    <main className="min-h-screen bg-slate-50 px-4 py-4 text-slate-950 sm:px-6 sm:py-8">
+      <div className="mx-auto grid w-full max-w-6xl gap-4 sm:gap-6 lg:grid-cols-[1fr_380px]">
+        <div className="grid gap-4 sm:gap-6">
+          <DashboardHeader
+            firstName={firstName}
+            greeting={getGreeting()}
+            onLogout={signOut}
+          />
           <BalanceCard summary={dashboardDefaultState.summary} />
-          <MonthlySummary summary={dashboardDefaultState.summary} />
           <QuickActions />
+          <section className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-lg shadow-slate-950/[0.03] sm:rounded-[28px] sm:p-6">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <h2 className="text-lg font-semibold text-slate-950">
+                Accounts
+              </h2>
+              <Link
+                aria-label="Open accounts"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-green-700 outline-none transition hover:text-green-800 focus-visible:rounded-xl focus-visible:ring-4 focus-visible:ring-green-600/10"
+                to="/accounts"
+              >
+                View
+                <ChevronRight className="size-4" aria-hidden="true" />
+              </Link>
+            </div>
+            <Link
+              className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3 outline-none transition hover:bg-green-50 focus-visible:ring-4 focus-visible:ring-green-600/10"
+              to="/accounts"
+            >
+              <span className="flex items-center gap-3">
+                <span className="flex size-10 items-center justify-center rounded-2xl bg-white text-green-700 shadow-sm">
+                  <WalletCards className="size-5" aria-hidden="true" />
+                </span>
+                <span>
+                  <span className="block text-sm font-semibold text-slate-950">
+                    Cash, cards, and bank accounts
+                  </span>
+                  <span className="mt-0.5 block text-sm text-slate-500">
+                    Manage balances and account status
+                  </span>
+                </span>
+              </span>
+              <ChevronRight
+                className="size-5 shrink-0 text-slate-400"
+                aria-hidden="true"
+              />
+            </Link>
+          </section>
+          <MonthlySummary summary={dashboardDefaultState.summary} />
         </div>
 
-        <div className="lg:pt-[120px]">
+        <div className="lg:pt-[102px]">
           <RecentTransactions
             currency={dashboardDefaultState.summary.currency}
             transactions={dashboardDefaultState.transactions}

@@ -18,11 +18,21 @@ export type CreateAccountInput = {
   name: string;
   type: AccountType;
   currency: AccountCurrency;
-  currentBalance?: number;
+  initialBalance: number;
 };
 
 export type UpdateAccountInput = {
+  id: string;
   name?: string;
   type?: AccountType;
+  currency?: AccountCurrency;
   isActive?: boolean;
+};
+
+export type AccountFormValues = {
+  name: string;
+  type: AccountType;
+  currency: AccountCurrency;
+  initialBalance: string;
+  isActive: boolean;
 };

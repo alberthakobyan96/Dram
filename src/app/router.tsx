@@ -6,9 +6,11 @@ import {
   RegisterPage,
   ResetPasswordPage,
 } from "../pages/Auth";
+import AccountsPage from "../pages/Accounts";
 import HomePage from "../pages/Home";
 import NotFoundPage from "../pages/NotFound";
 import ProfilePage from "../pages/Profile";
+import TransactionsPage from "../pages/Transactions";
 import Layout from "./layout";
 
 export const router = createBrowserRouter([
@@ -25,6 +27,18 @@ export const router = createBrowserRouter([
           {
             path: "/profile",
             element: <ProfilePage />,
+          },
+          {
+            path: "/accounts",
+            element: <AccountsPage />,
+          },
+          {
+            path: "/transactions",
+            element: <TransactionsPage />,
+          },
+          {
+            path: "/transactions/new",
+            element: <TransactionsPage />,
           },
         ],
       },

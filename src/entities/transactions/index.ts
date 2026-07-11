@@ -1,4 +1,10 @@
-export { transactionTypes } from "./model";
+export {
+  formatTransactionAmount,
+  formatTransactionDate,
+  transactionTypeDescriptions,
+  transactionTypeLabels,
+  transactionTypes,
+} from "./model";
 export type {
   CreateExpenseTransactionInput,
   CreateIncomeTransactionInput,
@@ -7,6 +13,7 @@ export type {
   ExpenseTransaction,
   IncomeTransaction,
   Transaction,
+  TransactionFormValues,
   TransactionType,
   TransferTransaction,
   UpdateTransactionInput,

@@ -36,19 +36,23 @@ export default function MonthlySummary({ summary }: MonthlySummaryProps) {
         return (
           <div
             key={metric.label}
-            className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-xl shadow-slate-950/[0.04]"
+            className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-lg shadow-slate-950/[0.03] sm:rounded-[28px] sm:p-5"
           >
-            <div
-              className={`flex size-11 items-center justify-center rounded-2xl ${metric.iconClassName}`}
-            >
-              <Icon className="size-5" aria-hidden="true" />
+            <div className="flex items-center gap-3">
+              <div
+                className={`flex size-10 shrink-0 items-center justify-center rounded-2xl sm:size-11 ${metric.iconClassName}`}
+              >
+                <Icon className="size-5" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-500">
+                  {metric.label}
+                </p>
+                <p className="mt-1 text-xl font-semibold text-slate-950 sm:text-2xl">
+                  {metric.value}
+                </p>
+              </div>
             </div>
-            <p className="mt-5 text-sm font-medium text-slate-500">
-              {metric.label}
-            </p>
-            <p className="mt-2 text-2xl font-semibold text-slate-950">
-              {metric.value}
-            </p>
           </div>
         );
       })}
