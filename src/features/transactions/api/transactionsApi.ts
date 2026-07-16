@@ -1,6 +1,4 @@
-import type {
-  AccountCurrency,
-} from "../../../entities/accounts";
+import type { AccountCurrency } from "../../../entities/accounts";
 import type {
   CreateTransactionInput,
   Transaction,
@@ -22,6 +20,19 @@ type TransactionRow = {
   created_at: string;
   updated_at: string;
 };
+
+export type FetchTransactionsOptions = {
+  fetchAll?: boolean;
+  limit?: number;
+  occurredBefore?: string;
+  occurredFrom?: string;
+};
+
+export const defaultTransactionLimit = 50;
+
+const transactionPageSize = 1000;
+const transactionColumns =
+  "id,user_id,type,amount,currency,category_id,account_id,destination_account_id,occurred_at,note,created_at,updated_at";
 
 const requireSupabase = () => {
   if (!supabase) {
@@ -61,21 +72,67 @@ const mapTransaction = (row: TransactionRow): Transaction => {
   };
 };
 
-export const fetchTransactions = async (): Promise<Transaction[]> => {
+export const fetchTransactions = async (
+  options: FetchTransactionsOptions = {},
+): Promise<Transaction[]> => {
   const client = requireSupabase();
-  const { data, error } = await client
-    .from("transactions")
-    .select(
-      "id,user_id,type,amount,currency,category_id,account_id,destination_account_id,occurred_at,note,created_at,updated_at",
-    )
-    .order("occurred_at", { ascending: false })
-    .limit(50);
 
-  if (error) {
-    throw new Error(error.message);
+  const createQuery = () => {
+    let query = client
+      .from("transactions")
+      .select(transactionColumns)
+      .order("occurred_at", { ascending: false })
+      .order("id", { ascending: false });
+
+    if (options.occurredFrom) {
+      query = query.gte("occurred_at", options.occurredFrom);
+    }
+
+    if (options.occurredBefore) {
+      query = query.lt("occurred_at", options.occurredBefore);
+    }
+
+    return query;
+  };
+
+  if (!options.fetchAll) {
+    const limit = Math.max(
+      1,
+      Math.floor(options.limit ?? defaultTransactionLimit),
+    );
+    const { data, error } = await createQuery().limit(limit);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return ((data ?? []) as TransactionRow[]).map(mapTransaction);
   }
 
-  return ((data ?? []) as TransactionRow[]).map(mapTransaction);
+  const rows: TransactionRow[] = [];
+  let pageStart = 0;
+
+  while (true) {
+    const { data, error } = await createQuery().range(
+      pageStart,
+      pageStart + transactionPageSize - 1,
+    );
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const page = (data ?? []) as TransactionRow[];
+    rows.push(...page);
+
+    if (page.length === 0) {
+      break;
+    }
+
+    pageStart += page.length;
+  }
+
+  return rows.map(mapTransaction);
 };
 
 export const createTransaction = async (

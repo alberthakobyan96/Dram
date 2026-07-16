@@ -1,10 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchTransactions } from "../api/transactionsApi";
+import { useAuthStore } from "../../../entities/auth";
+import {
+  defaultTransactionLimit,
+  fetchTransactions,
+  type FetchTransactionsOptions,
+} from "../api/transactionsApi";
 
 export const transactionsQueryKey = ["transactions"] as const;
 
-export const useTransactions = () =>
-  useQuery({
-    queryFn: fetchTransactions,
-    queryKey: transactionsQueryKey,
+const getTransactionsQueryKey = (
+  userId: string | undefined,
+  options: FetchTransactionsOptions,
+) =>
+  [
+    ...transactionsQueryKey,
+    userId ?? "signed-out",
+    {
+      fetchAll: options.fetchAll ?? false,
+      limit: options.fetchAll
+        ? null
+        : (options.limit ?? defaultTransactionLimit),
+      occurredBefore: options.occurredBefore ?? null,
+      occurredFrom: options.occurredFrom ?? null,
+    },
+  ] as const;
+
+export const useTransactions = (options: FetchTransactionsOptions = {}) => {
+  const userId = useAuthStore((state) => state.user?.id);
+
+  return useQuery({
+    enabled: Boolean(userId),
+    queryFn: () => fetchTransactions(options),
+    queryKey: getTransactionsQueryKey(userId, options),
   });
+};

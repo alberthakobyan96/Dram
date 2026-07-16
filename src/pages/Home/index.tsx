@@ -1,7 +1,7 @@
 import { ChevronRight, WalletCards } from "lucide-react";
 import { Link } from "react-router-dom";
-import { dashboardDefaultState } from "../../entities/dashboard";
 import { useAuthStore } from "../../entities/auth";
+import { useDashboardData } from "../../features/dashboard/hooks/useDashboardData";
 import { supabase } from "../../shared/api/supabase";
 import BalanceCard from "./components/BalanceCard";
 import DashboardHeader from "./components/DashboardHeader";
@@ -40,6 +40,7 @@ const getGreeting = () => {
 
 export default function HomePage() {
   const user = useAuthStore((state) => state.user);
+  const dashboard = useDashboardData();
   const displaySource =
     typeof user?.user_metadata.full_name === "string"
       ? user.user_metadata.full_name
@@ -63,7 +64,12 @@ export default function HomePage() {
             greeting={getGreeting()}
             onLogout={signOut}
           />
-          <BalanceCard summary={dashboardDefaultState.summary} />
+          <BalanceCard
+            errorMessage={dashboard.balance.errorMessage}
+            isLoading={dashboard.balance.isLoading}
+            onRetry={dashboard.balance.retry}
+            summary={dashboard.summary}
+          />
           <QuickActions />
           <section className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-lg shadow-slate-950/[0.03] sm:rounded-[28px] sm:p-6">
             <div className="mb-3 flex items-center justify-between gap-4">
@@ -102,13 +108,20 @@ export default function HomePage() {
               />
             </Link>
           </section>
-          <MonthlySummary summary={dashboardDefaultState.summary} />
+          <MonthlySummary
+            errorMessage={dashboard.monthly.errorMessage}
+            isLoading={dashboard.monthly.isLoading}
+            onRetry={dashboard.monthly.retry}
+            summary={dashboard.summary}
+          />
         </div>
 
         <div className="lg:pt-[102px]">
           <RecentTransactions
-            currency={dashboardDefaultState.summary.currency}
-            transactions={dashboardDefaultState.transactions}
+            errorMessage={dashboard.recent.errorMessage}
+            isLoading={dashboard.recent.isLoading}
+            onRetry={dashboard.recent.retry}
+            transactions={dashboard.transactions}
           />
         </div>
       </div>

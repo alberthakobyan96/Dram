@@ -17,6 +17,10 @@ type CategoryRow = {
   updated_at: string;
 };
 
+export type FetchCategoriesOptions = {
+  includeInactive?: boolean;
+};
+
 const requireSupabase = () => {
   if (!supabase) {
     throw new Error(supabaseConfigError);
@@ -38,16 +42,23 @@ const mapCategory = (row: CategoryRow): Category => ({
   userId: row.user_id,
 });
 
-export const fetchCategories = async (): Promise<Category[]> => {
+export const fetchCategories = async (
+  options: FetchCategoriesOptions = {},
+): Promise<Category[]> => {
   const client = requireSupabase();
-  const { data, error } = await client
+  let query = client
     .from("categories")
     .select(
       "id,user_id,name,type,icon,color,is_default,is_active,created_at,updated_at",
     )
-    .eq("is_active", true)
     .order("is_default", { ascending: false })
     .order("name", { ascending: true });
+
+  if (!options.includeInactive) {
+    query = query.eq("is_active", true);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(error.message);

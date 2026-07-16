@@ -1,24 +1,32 @@
-export type DashboardCurrency = "USD" | "AMD";
+import type { AccountCurrency } from "../accounts";
+import type { TransactionType } from "../transactions";
 
-export type DashboardSummary = {
-  totalBalance: number;
-  monthlyIncome: number;
-  monthlyExpenses: number;
+export type DashboardCurrency = AccountCurrency;
+
+export type DashboardCurrencyAmount = {
+  amount: number;
   currency: DashboardCurrency;
 };
 
-export type TransactionType = "income" | "expense";
+export type DashboardSummary = {
+  activeAccountCount: number;
+  monthlyExpenses: DashboardCurrencyAmount[];
+  monthlyIncome: DashboardCurrencyAmount[];
+  totalBalances: DashboardCurrencyAmount[];
+};
 
-export type Transaction = {
-  id: string;
-  title: string;
-  category: string;
+export type DashboardTransaction = {
+  accountName: string;
   amount: number;
+  categoryName: string;
+  currency: DashboardCurrency;
+  destinationAccountName: string | null;
+  id: string;
+  occurredAt: string;
   type: TransactionType;
-  date: string;
 };
 
 export type DashboardState = {
   summary: DashboardSummary;
-  transactions: Transaction[];
+  transactions: DashboardTransaction[];
 };

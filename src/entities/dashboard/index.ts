@@ -1,8 +1,12 @@
-export { dashboardDefaultState } from "./model";
+export {
+  buildDashboardSummary,
+  buildDashboardTransactions,
+  formatDashboardAmount,
+} from "./model";
 export type {
   DashboardCurrency,
+  DashboardCurrencyAmount,
   DashboardState,
   DashboardSummary,
-  Transaction,
-  TransactionType,
+  DashboardTransaction,
 } from "./types";
