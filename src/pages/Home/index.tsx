@@ -27,24 +27,34 @@ const getFirstName = (value?: string) => {
 const getGreeting = () => {
   const hour = new Date().getHours();
 
+  if (hour < 5) {
+    return "Good night";
+  }
+
   if (hour < 12) {
     return "Good morning";
   }
 
-  if (hour < 18) {
+  if (hour < 17) {
     return "Good afternoon";
   }
 
-  return "Good evening";
+  if (hour < 22) {
+    return "Good evening";
+  }
+
+  return "Good night";
 };
 
 export default function HomePage() {
   const user = useAuthStore((state) => state.user);
   const dashboard = useDashboardData();
   const displaySource =
-    typeof user?.user_metadata.full_name === "string"
-      ? user.user_metadata.full_name
-      : user?.email;
+    typeof user?.user_metadata.first_name === "string"
+      ? user.user_metadata.first_name
+      : typeof user?.user_metadata.full_name === "string"
+        ? user.user_metadata.full_name
+        : undefined;
   const firstName = getFirstName(displaySource);
 
   const signOut = async () => {
@@ -56,9 +66,9 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-4 text-slate-950 sm:px-6 sm:py-8">
-      <div className="mx-auto grid w-full max-w-6xl gap-4 sm:gap-6 lg:grid-cols-[1fr_380px]">
-        <div className="grid gap-4 sm:gap-6">
+    <main className="min-h-dvh overflow-x-hidden bg-slate-50 px-4 pb-[calc(env(safe-area-inset-bottom)+16px)] pt-[calc(env(safe-area-inset-top)+12px)] text-slate-950 sm:px-6 sm:py-8">
+      <div className="mx-auto grid w-full max-w-6xl gap-3 sm:gap-6 lg:grid-cols-[1fr_380px]">
+        <div className="grid min-w-0 gap-3 sm:gap-6">
           <DashboardHeader
             firstName={firstName}
             greeting={getGreeting()}
@@ -71,14 +81,14 @@ export default function HomePage() {
             summary={dashboard.summary}
           />
           <QuickActions />
-          <section className="rounded-[26px] border border-slate-200 bg-white p-4 shadow-lg shadow-slate-950/[0.03] sm:rounded-[28px] sm:p-6">
+          <section className="rounded-3xl border border-slate-200/80 bg-white p-4 shadow-sm shadow-slate-950/[0.03] sm:p-6">
             <div className="mb-3 flex items-center justify-between gap-4">
-              <h2 className="text-lg font-semibold text-slate-950">
+              <h2 className="text-[17px] font-semibold text-slate-950">
                 Accounts
               </h2>
               <Link
                 aria-label="Open accounts"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-green-700 outline-none transition hover:text-green-800 focus-visible:rounded-xl focus-visible:ring-4 focus-visible:ring-green-600/10"
+                className="inline-flex min-h-11 items-center gap-1 rounded-xl px-1 text-sm font-semibold text-green-700 outline-none transition hover:text-green-800 focus-visible:ring-4 focus-visible:ring-green-600/10"
                 to="/accounts"
               >
                 View
@@ -86,18 +96,18 @@ export default function HomePage() {
               </Link>
             </div>
             <Link
-              className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3 outline-none transition hover:bg-green-50 focus-visible:ring-4 focus-visible:ring-green-600/10"
+              className="flex min-h-14 min-w-0 items-center justify-between gap-3 rounded-2xl bg-slate-50 px-3 py-2.5 outline-none transition hover:bg-green-50 focus-visible:ring-4 focus-visible:ring-green-600/10"
               to="/accounts"
             >
-              <span className="flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center rounded-2xl bg-white text-green-700 shadow-sm">
+              <span className="flex min-w-0 items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white text-green-700 shadow-sm">
                   <WalletCards className="size-5" aria-hidden="true" />
                 </span>
-                <span>
-                  <span className="block text-sm font-semibold text-slate-950">
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-semibold text-slate-950">
                     Cash, cards, and bank accounts
                   </span>
-                  <span className="mt-0.5 block text-sm text-slate-500">
+                  <span className="mt-0.5 block truncate text-xs text-slate-500 sm:text-sm">
                     Manage balances and account status
                   </span>
                 </span>
@@ -116,7 +126,7 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="lg:pt-[102px]">
+        <div className="min-w-0 lg:pt-[94px]">
           <RecentTransactions
             errorMessage={dashboard.recent.errorMessage}
             isLoading={dashboard.recent.isLoading}

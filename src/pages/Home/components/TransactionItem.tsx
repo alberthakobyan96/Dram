@@ -3,7 +3,6 @@ import {
   formatDashboardAmount,
   type DashboardTransaction,
 } from "../../../entities/dashboard";
-import { transactionTypeLabels } from "../../../entities/transactions";
 
 type TransactionItemProps = {
   transaction: DashboardTransaction;
@@ -19,6 +18,18 @@ const icons = {
   expense: ArrowUpRight,
   income: ArrowDownLeft,
   transfer: ArrowLeftRight,
+};
+
+const iconStyles = {
+  expense: "bg-red-50 text-red-600",
+  income: "bg-green-50 text-green-700",
+  transfer: "bg-slate-100 text-slate-600",
+};
+
+const amountStyles = {
+  expense: "text-red-600",
+  income: "text-green-700",
+  transfer: "text-slate-700",
 };
 
 export default function TransactionItem({
@@ -37,33 +48,24 @@ export default function TransactionItem({
         : "";
 
   return (
-    <li className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-3">
+    <li className="flex min-w-0 items-center gap-2.5 rounded-2xl px-1 py-2.5 transition-colors hover:bg-slate-50">
       <div
-        className={`flex size-11 shrink-0 items-center justify-center rounded-2xl ${
-          transaction.type === "expense"
-            ? "bg-slate-100 text-slate-600"
-            : "bg-green-50 text-green-700"
-        }`}
+        className={`flex size-10 shrink-0 items-center justify-center rounded-2xl ${iconStyles[transaction.type]}`}
       >
-        <Icon className="size-5" aria-hidden="true" />
+        <Icon className="size-4.5" aria-hidden="true" />
       </div>
 
       <div className="min-w-0 flex-1">
         <p className="truncate text-sm font-semibold text-slate-950">
-          {accountLabel}
+          {transaction.categoryName}
         </p>
-        <p className="mt-1 truncate text-xs font-medium text-slate-500">
-          {transactionTypeLabels[transaction.type]} · {transaction.categoryName}{" "}
-          · {formatDate(transaction.occurredAt)}
+        <p className="mt-0.5 truncate text-xs font-medium text-slate-500">
+          {accountLabel} · {formatDate(transaction.occurredAt)}
         </p>
       </div>
 
       <p
-        className={`max-w-[42%] shrink-0 text-right text-sm font-semibold ${
-          transaction.type === "income"
-            ? "text-green-700"
-            : "text-slate-950"
-        }`}
+        className={`max-w-[44%] shrink-0 break-words text-right text-xs font-bold leading-5 tabular-nums sm:text-sm ${amountStyles[transaction.type]}`}
       >
         {amountPrefix}
         {formatDashboardAmount(transaction.amount, transaction.currency)}
